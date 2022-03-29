@@ -3,7 +3,7 @@ package main
 import (
 	"net"
 
-	serverv1 "github.com/cory-evans/gps-tracker-position/internal/server/v1"
+	servicev1 "github.com/cory-evans/gps-tracker-position/internal/service/v1"
 	positionv1 "github.com/cory-evans/gps-tracker-position/pkg/position/v1"
 	"google.golang.org/grpc"
 )
@@ -17,7 +17,7 @@ func main() {
 
 	grpcServer := grpc.NewServer()
 
-	positionv1.RegisterPositionServiceServer(grpcServer, &serverv1.PositionService{})
+	positionv1.RegisterPositionServiceServer(grpcServer, &servicev1.PositionService{})
 
 	grpcServer.Serve(listen)
 }
