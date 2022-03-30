@@ -16,7 +16,72 @@
     "application/json"
   ],
   "paths": {
-    "/position/{id}": {
+    "/my-trackers": {
+      "get": {
+        "summary": "Get the current positions of owned devices",
+        "operationId": "PositionService_GetOwnedDevicesPositions",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetOwnedDevicesPositionResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "PositionService"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/position": {
+      "post": {
+        "operationId": "PositionService_PostPosition",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1PostPositionResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1PostPositionRequest"
+            }
+          }
+        ],
+        "tags": [
+          "PositionService"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/position/{deviceId}": {
       "get": {
         "operationId": "PositionService_GetPosition",
         "responses": {
@@ -35,7 +100,7 @@
         },
         "parameters": [
           {
-            "name": "id",
+            "name": "deviceId",
             "in": "path",
             "required": true,
             "type": "string"
@@ -43,6 +108,46 @@
         ],
         "tags": [
           "PositionService"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
+    },
+    "/position/{deviceId}/recent": {
+      "get": {
+        "operationId": "PositionService_GetRecentPosition",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1GetRecentPositionResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "deviceId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "PositionService"
+        ],
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
         ]
       }
     }
@@ -75,11 +180,33 @@
         }
       }
     },
+    "v1GetOwnedDevicesPositionResponse": {
+      "type": "object",
+      "properties": {
+        "positions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Position"
+          }
+        }
+      }
+    },
     "v1GetPositionResponse": {
       "type": "object",
       "properties": {
         "position": {
           "$ref": "#/definitions/v1Position"
+        }
+      }
+    },
+    "v1GetRecentPositionResponse": {
+      "type": "object",
+      "properties": {
+        "positions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Position"
+          }
         }
       }
     },
@@ -96,8 +223,61 @@
         "longitude": {
           "type": "number",
           "format": "double"
+        },
+        "altitude": {
+          "type": "number",
+          "format": "double"
+        },
+        "speedKnts": {
+          "type": "number",
+          "format": "double"
+        },
+        "accuracy": {
+          "type": "number",
+          "format": "double"
+        },
+        "deviceId": {
+          "type": "string"
         }
       }
+    },
+    "v1PostPositionRequest": {
+      "type": "object",
+      "properties": {
+        "deviceTime": {
+          "type": "string"
+        },
+        "latitude": {
+          "type": "number",
+          "format": "double"
+        },
+        "longitude": {
+          "type": "number",
+          "format": "double"
+        },
+        "altitude": {
+          "type": "number",
+          "format": "double"
+        },
+        "speedKnts": {
+          "type": "number",
+          "format": "double"
+        },
+        "accuracy": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "v1PostPositionResponse": {
+      "type": "object"
+    }
+  },
+  "securityDefinitions": {
+    "ApiKeyAuth": {
+      "type": "apiKey",
+      "name": "Authorization",
+      "in": "header"
     }
   }
 }

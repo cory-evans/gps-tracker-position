@@ -19,6 +19,9 @@ const _ = grpc.SupportPackageIsVersion7
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type PositionServiceClient interface {
 	GetPosition(ctx context.Context, in *GetPositionRequest, opts ...grpc.CallOption) (*GetPositionResponse, error)
+	PostPosition(ctx context.Context, in *PostPositionRequest, opts ...grpc.CallOption) (*PostPositionResponse, error)
+	GetRecentPosition(ctx context.Context, in *GetRecentPositionRequest, opts ...grpc.CallOption) (*GetRecentPositionResponse, error)
+	GetOwnedDevicesPositions(ctx context.Context, in *GetOwnedDevicesPositionRequest, opts ...grpc.CallOption) (*GetOwnedDevicesPositionResponse, error)
 }
 
 type positionServiceClient struct {
@@ -38,11 +41,41 @@ func (c *positionServiceClient) GetPosition(ctx context.Context, in *GetPosition
 	return out, nil
 }
 
+func (c *positionServiceClient) PostPosition(ctx context.Context, in *PostPositionRequest, opts ...grpc.CallOption) (*PostPositionResponse, error) {
+	out := new(PostPositionResponse)
+	err := c.cc.Invoke(ctx, "/pkg.position.v1.PositionService/PostPosition", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *positionServiceClient) GetRecentPosition(ctx context.Context, in *GetRecentPositionRequest, opts ...grpc.CallOption) (*GetRecentPositionResponse, error) {
+	out := new(GetRecentPositionResponse)
+	err := c.cc.Invoke(ctx, "/pkg.position.v1.PositionService/GetRecentPosition", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *positionServiceClient) GetOwnedDevicesPositions(ctx context.Context, in *GetOwnedDevicesPositionRequest, opts ...grpc.CallOption) (*GetOwnedDevicesPositionResponse, error) {
+	out := new(GetOwnedDevicesPositionResponse)
+	err := c.cc.Invoke(ctx, "/pkg.position.v1.PositionService/GetOwnedDevicesPositions", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PositionServiceServer is the server API for PositionService service.
 // All implementations must embed UnimplementedPositionServiceServer
 // for forward compatibility
 type PositionServiceServer interface {
 	GetPosition(context.Context, *GetPositionRequest) (*GetPositionResponse, error)
+	PostPosition(context.Context, *PostPositionRequest) (*PostPositionResponse, error)
+	GetRecentPosition(context.Context, *GetRecentPositionRequest) (*GetRecentPositionResponse, error)
+	GetOwnedDevicesPositions(context.Context, *GetOwnedDevicesPositionRequest) (*GetOwnedDevicesPositionResponse, error)
 	mustEmbedUnimplementedPositionServiceServer()
 }
 
@@ -52,6 +85,15 @@ type UnimplementedPositionServiceServer struct {
 
 func (UnimplementedPositionServiceServer) GetPosition(context.Context, *GetPositionRequest) (*GetPositionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetPosition not implemented")
+}
+func (UnimplementedPositionServiceServer) PostPosition(context.Context, *PostPositionRequest) (*PostPositionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PostPosition not implemented")
+}
+func (UnimplementedPositionServiceServer) GetRecentPosition(context.Context, *GetRecentPositionRequest) (*GetRecentPositionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetRecentPosition not implemented")
+}
+func (UnimplementedPositionServiceServer) GetOwnedDevicesPositions(context.Context, *GetOwnedDevicesPositionRequest) (*GetOwnedDevicesPositionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetOwnedDevicesPositions not implemented")
 }
 func (UnimplementedPositionServiceServer) mustEmbedUnimplementedPositionServiceServer() {}
 
@@ -84,6 +126,60 @@ func _PositionService_GetPosition_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PositionService_PostPosition_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PostPositionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PositionServiceServer).PostPosition(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pkg.position.v1.PositionService/PostPosition",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PositionServiceServer).PostPosition(ctx, req.(*PostPositionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PositionService_GetRecentPosition_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetRecentPositionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PositionServiceServer).GetRecentPosition(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pkg.position.v1.PositionService/GetRecentPosition",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PositionServiceServer).GetRecentPosition(ctx, req.(*GetRecentPositionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PositionService_GetOwnedDevicesPositions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetOwnedDevicesPositionRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PositionServiceServer).GetOwnedDevicesPositions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/pkg.position.v1.PositionService/GetOwnedDevicesPositions",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PositionServiceServer).GetOwnedDevicesPositions(ctx, req.(*GetOwnedDevicesPositionRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // PositionService_ServiceDesc is the grpc.ServiceDesc for PositionService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -94,6 +190,18 @@ var PositionService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetPosition",
 			Handler:    _PositionService_GetPosition_Handler,
+		},
+		{
+			MethodName: "PostPosition",
+			Handler:    _PositionService_PostPosition_Handler,
+		},
+		{
+			MethodName: "GetRecentPosition",
+			Handler:    _PositionService_GetRecentPosition_Handler,
+		},
+		{
+			MethodName: "GetOwnedDevicesPositions",
+			Handler:    _PositionService_GetOwnedDevicesPositions_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
