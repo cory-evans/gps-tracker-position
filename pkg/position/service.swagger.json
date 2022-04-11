@@ -24,7 +24,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1GetOwnedDevicesPositionResponse"
+              "$ref": "#/definitions/positionGetOwnedDevicesPositionResponse"
             }
           },
           "default": {
@@ -51,7 +51,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1PostPositionResponse"
+              "$ref": "#/definitions/positionPostPositionResponse"
             }
           },
           "default": {
@@ -67,7 +67,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/v1PostPositionRequest"
+              "$ref": "#/definitions/positionPostPositionRequest"
             }
           }
         ],
@@ -88,7 +88,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1GetPositionResponse"
+              "$ref": "#/definitions/positionGetPositionResponse"
             }
           },
           "default": {
@@ -123,7 +123,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/v1GetRecentPositionResponse"
+              "$ref": "#/definitions/positionGetRecentPositionResponse"
             }
           },
           "default": {
@@ -153,64 +153,37 @@
     }
   },
   "definitions": {
-    "protobufAny": {
-      "type": "object",
-      "properties": {
-        "@type": {
-          "type": "string"
-        }
-      },
-      "additionalProperties": {}
-    },
-    "rpcStatus": {
-      "type": "object",
-      "properties": {
-        "code": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "message": {
-          "type": "string"
-        },
-        "details": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/protobufAny"
-          }
-        }
-      }
-    },
-    "v1GetOwnedDevicesPositionResponse": {
+    "positionGetOwnedDevicesPositionResponse": {
       "type": "object",
       "properties": {
         "positions": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/v1Position"
+            "$ref": "#/definitions/positionPosition"
           }
         }
       }
     },
-    "v1GetPositionResponse": {
+    "positionGetPositionResponse": {
       "type": "object",
       "properties": {
         "position": {
-          "$ref": "#/definitions/v1Position"
+          "$ref": "#/definitions/positionPosition"
         }
       }
     },
-    "v1GetRecentPositionResponse": {
+    "positionGetRecentPositionResponse": {
       "type": "object",
       "properties": {
         "positions": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/v1Position"
+            "$ref": "#/definitions/positionPosition"
           }
         }
       }
     },
-    "v1Position": {
+    "positionPosition": {
       "type": "object",
       "properties": {
         "id": {
@@ -228,7 +201,7 @@
           "type": "number",
           "format": "double"
         },
-        "speedKnts": {
+        "speedKnots": {
           "type": "number",
           "format": "double"
         },
@@ -241,7 +214,7 @@
         }
       }
     },
-    "v1PostPositionRequest": {
+    "positionPostPositionRequest": {
       "type": "object",
       "properties": {
         "deviceTime": {
@@ -269,8 +242,35 @@
         }
       }
     },
-    "v1PostPositionResponse": {
+    "positionPostPositionResponse": {
       "type": "object"
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
     }
   },
   "securityDefinitions": {

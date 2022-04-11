@@ -1,8 +1,8 @@
 syntax = "proto3";
 
-package pkg.position.v1;
+package pkg.position;
 
-option go_package = "github.com/cory-evans/gps-tracker-position/pkg/position/v1;positionv1";
+option go_package = "github.com/cory-evans/gps-tracker-position/pkg/position";
 
 import "google/api/annotations.proto";
 import "protoc-gen-openapiv2/options/annotations.proto";
@@ -88,7 +88,7 @@ message Position {
 	double latitude = 2;
 	double longitude = 3;
 	double altitude = 4;
-	double speed_knts = 5;
+	double speed_knots = 5;
 	double accuracy = 6;
 	string device_id = 7;
 }

@@ -4,7 +4,7 @@ import (
 	"context"
 	"log"
 
-	positionv1 "github.com/cory-evans/gps-tracker-position/pkg/position/v1"
+	"github.com/cory-evans/gps-tracker-position/pkg/position"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -17,9 +17,9 @@ func main() {
 
 	defer conn.Close()
 
-	client := positionv1.NewPositionServiceClient(conn)
+	client := position.NewPositionServiceClient(conn)
 
-	resp, err := client.GetPosition(context.Background(), &positionv1.GetPositionRequest{})
+	resp, err := client.GetPosition(context.Background(), &position.GetPositionRequest{})
 
 	if err != nil {
 		log.Fatalln(err)
