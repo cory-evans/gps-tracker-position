@@ -232,7 +232,7 @@
           "type": "number",
           "format": "double"
         },
-        "speedKnts": {
+        "speedKnots": {
           "type": "number",
           "format": "double"
         },

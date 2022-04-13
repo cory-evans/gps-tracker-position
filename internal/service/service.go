@@ -3,8 +3,10 @@ package service
 import (
 	"context"
 	"fmt"
+	"log"
 	"math/rand"
 
+	"github.com/cory-evans/gps-tracker-authentication/pkg/auth"
 	"github.com/cory-evans/gps-tracker-authentication/pkg/jwtauth"
 	"github.com/cory-evans/gps-tracker-position/pkg/position"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -14,7 +16,18 @@ import (
 type PositionService struct {
 	position.PositionServiceServer
 
-	DB *mongo.Database
+	DB                *mongo.Database
+	AuthServiceClient auth.AuthServiceClient
+}
+
+func (s *PositionService) AuthFuncOverride(ctx context.Context, fullMethodName string) (context.Context, error) {
+	// map incomming JWT to context metadata
+	ctx, err := jwtauth.MapJWT(ctx)
+	if err != nil {
+		log.Println("error mapping JWT to context metadata:", err)
+	}
+
+	return ctx, nil
 }
 
 func (s *PositionService) GetPosition(ctx context.Context, req *position.GetPositionRequest) (*position.GetPositionResponse, error) {

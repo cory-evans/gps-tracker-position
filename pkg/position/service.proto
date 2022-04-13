@@ -114,7 +114,7 @@ message PostPositionRequest {
 	double latitude = 2;
 	double longitude = 3;
 	double altitude = 4;
-	double speed_knts = 5;
+	double speed_knots = 5;
 	double accuracy = 6;
 }
 
