@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"math/rand"
 	"os"
@@ -46,10 +45,7 @@ func (s *PositionService) getAuthServiceClient() (auth.AuthServiceClient, error)
 }
 
 func (s *PositionService) GetPosition(ctx context.Context, req *position.GetPositionRequest) (*position.GetPositionResponse, error) {
-	userId := jwtauth.GetUserIdFromContext(ctx)
-	if userId == "" {
-		return nil, fmt.Errorf("Not authenticated.")
-	}
+	// TODO: fetch position from DB
 	return &position.GetPositionResponse{
 		Position: &position.Position{
 			Latitude:  float64(rand.Intn(90) - 45),
@@ -60,15 +56,28 @@ func (s *PositionService) GetPosition(ctx context.Context, req *position.GetPosi
 
 func (s *PositionService) GetOwnedDevicesPosition(ctx context.Context, req *position.GetOwnedDevicesPositionRequest) (*position.GetOwnedDevicesPositionResponse, error) {
 	userId := jwtauth.GetUserIdFromContext(ctx)
-	if userId == "" {
-		return nil, fmt.Errorf("Not authenticated.")
+
+	authServiceClient, err := s.getAuthServiceClient()
+	if err != nil {
+		return nil, err
 	}
+
+	devices, err := authServiceClient.GetOwnedDevices(ctx, &auth.GetOwnedDevicesRequest{})
+	if err != nil {
+		return nil, err
+	}
+
+	positions := make([]*position.Position, len(devices.Devices))
+
+	// TODO: fetch positions from DB
+	for i, device := range devices.Devices {
+		positions[i] = &position.Position{
+			Latitude:  float64(rand.Intn(90) - 45),
+			Longitude: float64(rand.Intn(180) - 90),
+		}
+	}
+
 	return &position.GetOwnedDevicesPositionResponse{
-		Positions: []*position.Position{
-			{
-				Latitude:  float64(rand.Intn(90) - 45),
-				Longitude: float64(rand.Intn(180) - 90),
-			},
-		},
+		Positions: positions,
 	}, nil
 }
