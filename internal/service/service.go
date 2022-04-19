@@ -5,38 +5,48 @@ import (
 	"fmt"
 	"log"
 	"math/rand"
+	"os"
 
 	"github.com/cory-evans/gps-tracker-authentication/pkg/auth"
 	"github.com/cory-evans/gps-tracker-authentication/pkg/jwtauth"
 	"github.com/cory-evans/gps-tracker-position/pkg/position"
 	"go.mongodb.org/mongo-driver/mongo"
-	"google.golang.org/grpc/metadata"
+	"google.golang.org/grpc"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/status"
 )
 
 type PositionService struct {
 	position.PositionServiceServer
 
-	DB                *mongo.Database
-	AuthServiceClient auth.AuthServiceClient
+	DB *mongo.Database
 }
 
 func (s *PositionService) AuthFuncOverride(ctx context.Context, fullMethodName string) (context.Context, error) {
-	// map incomming JWT to context metadata
 	ctx, err := jwtauth.MapJWT(ctx)
 	if err != nil {
 		log.Println("error mapping JWT to context metadata:", err)
+
+		// all requests are authenticated
+		return ctx, status.Errorf(codes.Unauthenticated, "Not authenticated.")
 	}
 
 	return ctx, nil
 }
 
-func (s *PositionService) GetPosition(ctx context.Context, req *position.GetPositionRequest) (*position.GetPositionResponse, error) {
-	// request has to be authenticated
-	md, ok := metadata.FromIncomingContext(ctx)
-	if !ok {
-		return nil, fmt.Errorf("Failed to get metadata from context")
+func (s *PositionService) getAuthServiceClient() (auth.AuthServiceClient, error) {
+	authConn, err := grpc.Dial(os.Getenv("AUTH_SERVICE"), grpc.WithTransportCredentials(insecure.NewCredentials()))
+
+	if err != nil {
+		return nil, err
 	}
-	userId := jwtauth.GetUserIdFromMetadata(md)
+
+	return auth.NewAuthServiceClient(authConn), nil
+}
+
+func (s *PositionService) GetPosition(ctx context.Context, req *position.GetPositionRequest) (*position.GetPositionResponse, error) {
+	userId := jwtauth.GetUserIdFromContext(ctx)
 	if userId == "" {
 		return nil, fmt.Errorf("Not authenticated.")
 	}
@@ -49,12 +59,7 @@ func (s *PositionService) GetPosition(ctx context.Context, req *position.GetPosi
 }
 
 func (s *PositionService) GetOwnedDevicesPosition(ctx context.Context, req *position.GetOwnedDevicesPositionRequest) (*position.GetOwnedDevicesPositionResponse, error) {
-	// request has to be authenticated
-	md, ok := metadata.FromIncomingContext(ctx)
-	if !ok {
-		return nil, fmt.Errorf("Failed to get metadata from context")
-	}
-	userId := jwtauth.GetUserIdFromMetadata(md)
+	userId := jwtauth.GetUserIdFromContext(ctx)
 	if userId == "" {
 		return nil, fmt.Errorf("Not authenticated.")
 	}

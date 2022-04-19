@@ -25,7 +25,11 @@ func (s *PositionService) PostPosition(ctx context.Context, req *position.PostPo
 	deviceId := jwtauth.GetUserIdFromMetadata(md)
 
 	// check device exists
-	getDeviceResp, err := s.AuthServiceClient.GetDevice(ctx, &auth.GetDeviceRequest{
+	authServiceClient, err := s.getAuthServiceClient()
+	if err != nil {
+		return nil, err
+	}
+	getDeviceResp, err := authServiceClient.GetDevice(ctx, &auth.GetDeviceRequest{
 		DeviceId: deviceId,
 	})
 
@@ -68,7 +72,11 @@ func (s *PositionService) GetRecentPosition(ctx context.Context, req *position.G
 	}
 
 	// check device exists
-	getDeviceResp, err := s.AuthServiceClient.GetDevice(ctx, &auth.GetDeviceRequest{
+	authServiceClient, err := s.getAuthServiceClient()
+	if err != nil {
+		return nil, err
+	}
+	getDeviceResp, err := authServiceClient.GetDevice(ctx, &auth.GetDeviceRequest{
 		DeviceId: req.GetDeviceId(),
 	})
 

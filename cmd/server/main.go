@@ -7,14 +7,12 @@ import (
 	"net"
 	"os"
 
-	"github.com/cory-evans/gps-tracker-authentication/pkg/auth"
 	"github.com/cory-evans/gps-tracker-position/internal/database"
 	"github.com/cory-evans/gps-tracker-position/internal/service"
 	"github.com/cory-evans/gps-tracker-position/pkg/position"
 	grpc_auth "github.com/grpc-ecosystem/go-grpc-middleware/auth"
 
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/metadata"
 )
 
@@ -41,13 +39,6 @@ func main() {
 		grpc.StreamInterceptor(grpc_auth.StreamServerInterceptor(myAuthFunc)),
 	)
 
-	authConn, err := grpc.Dial(os.Getenv("AUTH_SERVICE"), grpc.WithTransportCredentials(insecure.NewCredentials()))
-	if err != nil {
-		panic(err)
-	}
-
-	authServiceClient := auth.NewAuthServiceClient(authConn)
-
 	mongoCtx := context.Background()
 	db, err := database.NewDatabaseClient(os.Getenv("MONGO_URI"), mongoCtx)
 	if err != nil {
@@ -57,8 +48,7 @@ func main() {
 	positionDB := db.Database("position")
 
 	position.RegisterPositionServiceServer(grpcServer, &service.PositionService{
-		AuthServiceClient: authServiceClient,
-		DB:                positionDB,
+		DB: positionDB,
 	})
 
 	grpcServer.Serve(listen)
