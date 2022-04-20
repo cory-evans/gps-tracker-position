@@ -15,6 +15,7 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 )
 
@@ -58,13 +59,15 @@ func (s *PositionService) GetPosition(ctx context.Context, req *position.GetPosi
 	}, nil
 }
 
-func (s *PositionService) GetOwnedDevicesPosition(ctx context.Context, req *position.GetOwnedDevicesPositionRequest) (*position.GetOwnedDevicesPositionResponse, error) {
+func (s *PositionService) GetOwnedDevicesPositions(ctx context.Context, req *position.GetOwnedDevicesPositionRequest) (*position.GetOwnedDevicesPositionResponse, error) {
 	authServiceClient, err := s.getAuthServiceClient()
 	if err != nil {
 		return nil, err
 	}
 
-	devices, err := authServiceClient.GetOwnedDevices(ctx, &auth.GetOwnedDevicesRequest{})
+	md, _ := metadata.FromIncomingContext(ctx)
+	authCtx := metadata.NewOutgoingContext(ctx, md)
+	devices, err := authServiceClient.GetOwnedDevices(authCtx, &auth.GetOwnedDevicesRequest{})
 	if err != nil {
 		return nil, err
 	}

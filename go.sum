@@ -71,6 +71,8 @@ github.com/cory-evans/gps-tracker-authentication v0.0.0-20220413021608-5de1418c6
 github.com/cory-evans/gps-tracker-authentication v0.0.0-20220413021608-5de1418c6d14/go.mod h1:mwBcbSaXDc4hj0EQbwUvlBw/H1uehbFeOz/TcRIlkaU=
 github.com/cory-evans/gps-tracker-authentication v0.0.0-20220418231505-3db32ae3f405 h1:acxxDfmFDX4scOgbteYdayqmvXbym8NDN+VMnwHkWtU=
 github.com/cory-evans/gps-tracker-authentication v0.0.0-20220418231505-3db32ae3f405/go.mod h1:mwBcbSaXDc4hj0EQbwUvlBw/H1uehbFeOz/TcRIlkaU=
+github.com/cory-evans/gps-tracker-authentication v0.0.0-20220420025625-0bab2ab607b9 h1:BnLAa0W/8aWx2rmzU7v2EhBbeBjw1wUpe3GMQFkHFwU=
+github.com/cory-evans/gps-tracker-authentication v0.0.0-20220420025625-0bab2ab607b9/go.mod h1:mwBcbSaXDc4hj0EQbwUvlBw/H1uehbFeOz/TcRIlkaU=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

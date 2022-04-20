@@ -76,7 +76,9 @@ func (s *PositionService) GetRecentPosition(ctx context.Context, req *position.G
 	if err != nil {
 		return nil, err
 	}
-	getDeviceResp, err := authServiceClient.GetDevice(ctx, &auth.GetDeviceRequest{
+
+	authCtx := metadata.NewOutgoingContext(ctx, md)
+	getDeviceResp, err := authServiceClient.GetDevice(authCtx, &auth.GetDeviceRequest{
 		DeviceId: req.GetDeviceId(),
 	})
 
