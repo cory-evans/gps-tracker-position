@@ -16,20 +16,17 @@ import (
 func (s *PositionService) PostPosition(ctx context.Context, req *position.PostPositionRequest) (*position.PostPositionResponse, error) {
 	positionsCol := s.DB.Collection(models.POSITION_COLLECTION)
 
-	// request has to be authenticated
-	md, ok := metadata.FromIncomingContext(ctx)
-	if !ok {
-		return nil, fmt.Errorf("Failed to get metadata from context")
-	}
-
-	deviceId := jwtauth.GetUserIdFromMetadata(md)
+	deviceId := jwtauth.GetUserIdFromContext(ctx)
 
 	// check device exists
 	authServiceClient, err := s.getAuthServiceClient()
 	if err != nil {
 		return nil, err
 	}
-	getDeviceResp, err := authServiceClient.GetDevice(ctx, &auth.GetDeviceRequest{
+
+	md, _ := metadata.FromIncomingContext(ctx)
+	authCtx := metadata.NewOutgoingContext(ctx, md)
+	getDeviceResp, err := authServiceClient.GetDevice(authCtx, &auth.GetDeviceRequest{
 		DeviceId: deviceId,
 	})
 
@@ -57,18 +54,59 @@ func (s *PositionService) PostPosition(ctx context.Context, req *position.PostPo
 	return &position.PostPositionResponse{}, nil
 }
 
+func (s *PositionService) GetPosition(ctx context.Context, req *position.GetPositionRequest) (*position.GetPositionResponse, error) {
+	positionCol := s.DB.Collection(models.POSITION_COLLECTION)
+
+	var p models.Position
+	opts := options.FindOne().SetSort(bson.D{{"created_at", -1}})
+	err := positionCol.FindOne(ctx, bson.M{"device_id": req.GetDeviceId()}, opts).Decode(&p)
+	if err != nil {
+		return nil, err
+	}
+
+	return &position.GetPositionResponse{
+		Position: p.AsProtoBuf(),
+	}, nil
+}
+
+func (s *PositionService) GetOwnedDevicesPositions(ctx context.Context, req *position.GetOwnedDevicesPositionRequest) (*position.GetOwnedDevicesPositionResponse, error) {
+	authServiceClient, err := s.getAuthServiceClient()
+	if err != nil {
+		return nil, err
+	}
+
+	md, _ := metadata.FromIncomingContext(ctx)
+	authCtx := metadata.NewOutgoingContext(ctx, md)
+	devices, err := authServiceClient.GetOwnedDevices(authCtx, &auth.GetOwnedDevicesRequest{})
+	if err != nil {
+		return nil, err
+	}
+
+	positionCol := s.DB.Collection(models.POSITION_COLLECTION)
+
+	positions := make([]*position.Position, len(devices.Devices))
+
+	for i, device := range devices.Devices {
+		var p models.Position
+		err := positionCol.FindOne(ctx, bson.M{"device_id": device.DeviceId}).Decode(&p)
+		if err != nil {
+			return nil, err
+		}
+
+		positions[i] = p.AsProtoBuf()
+	}
+
+	return &position.GetOwnedDevicesPositionResponse{
+		Positions: positions,
+	}, nil
+}
+
 func (s *PositionService) GetRecentPosition(ctx context.Context, req *position.GetRecentPositionRequest) (*position.GetRecentPositionResponse, error) {
 	positionsCol := s.DB.Collection(models.POSITION_COLLECTION)
 
-	// request has to be authenticated
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
 		return nil, fmt.Errorf("Failed to get metadata from context")
-	}
-
-	userId := jwtauth.GetUserIdFromMetadata(md)
-	if userId == "" {
-		return nil, fmt.Errorf("Failed to get user id from metadata")
 	}
 
 	// check device exists

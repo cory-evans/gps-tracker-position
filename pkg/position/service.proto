@@ -84,7 +84,7 @@ service PositionService {
 }
 
 message Position {
-	string id = 1;
+	string created_at = 1;
 	double latitude = 2;
 	double longitude = 3;
 	double altitude = 4;

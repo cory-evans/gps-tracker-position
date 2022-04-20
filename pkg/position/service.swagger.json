@@ -186,7 +186,7 @@
     "positionPosition": {
       "type": "object",
       "properties": {
-        "id": {
+        "createdAt": {
           "type": "string"
         },
         "latitude": {

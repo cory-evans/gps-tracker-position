@@ -3,7 +3,7 @@ module github.com/cory-evans/gps-tracker-position
 go 1.17
 
 require (
-	github.com/cory-evans/gps-tracker-authentication v0.0.0-20220420025625-0bab2ab607b9
+	github.com/cory-evans/gps-tracker-authentication v0.0.0-20220420040459-fe8e623154f1
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.10.0
 	google.golang.org/genproto v0.0.0-20220414192740-2d67ff6cf2b4
 	google.golang.org/grpc v1.45.0
@@ -16,7 +16,6 @@ require (
 )
 
 require (
-	cloud.google.com/go v0.100.2 // indirect
 	cloud.google.com/go/compute v1.6.0 // indirect
 	github.com/go-stack/stack v1.8.1 // indirect
 	github.com/golang-jwt/jwt v3.2.2+incompatible // indirect
