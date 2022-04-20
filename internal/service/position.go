@@ -86,9 +86,11 @@ func (s *PositionService) GetOwnedDevicesPositions(ctx context.Context, req *pos
 
 	positions := make([]*position.Position, len(devices.Devices))
 
+	opts := options.FindOne().SetSort(bson.D{{"created_at", -1}})
+
 	for i, device := range devices.Devices {
 		var p models.Position
-		err := positionCol.FindOne(ctx, bson.M{"device_id": device.DeviceId}).Decode(&p)
+		err := positionCol.FindOne(ctx, bson.M{"device_id": device.DeviceId}, opts).Decode(&p)
 		if err != nil {
 			return nil, err
 		}
