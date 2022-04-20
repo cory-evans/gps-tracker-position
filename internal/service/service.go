@@ -87,8 +87,6 @@ func (s *PositionService) GetOwnedDevicesPositions(ctx context.Context, req *pos
 		positions[i] = p.AsProtoBuf()
 	}
 
-	log.Println("positions:", positions)
-
 	return &position.GetOwnedDevicesPositionResponse{
 		Positions: positions,
 	}, nil
