@@ -39,7 +39,11 @@ func (s *PositionService) AuthFuncOverride(ctx context.Context, fullMethodName s
 	log.Println("INFO: Authenticated request to", fullMethodName)
 
 	resp, err := authClient.SessionIsStillValid(ctx, &auth.SessionIsStillValidRequest{SessionId: jwtauth.GetSessionIdFromContext(ctx)})
-	if err != nil || !resp.IsValid {
+	if err != nil {
+		return ctx, status.Errorf(codes.Internal, "Internal Server Error: %s", err.Error())
+	}
+
+	if !resp.IsValid {
 		return ctx, status.Errorf(codes.Unauthenticated, "Session expired or no longer exists.")
 	}
 
