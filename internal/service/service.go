@@ -30,7 +30,18 @@ func (s *PositionService) AuthFuncOverride(ctx context.Context, fullMethodName s
 		return ctx, status.Errorf(codes.Unauthenticated, "Not authenticated.")
 	}
 
+	// check if session still exists
+	authClient, err := s.getAuthServiceClient()
+	if err != nil {
+		log.Println("error getting auth service client:", err)
+		return ctx, status.Errorf(codes.Internal, "Internal server error.")
+	}
 	log.Println("INFO: Authenticated request to", fullMethodName)
+
+	resp, err := authClient.SessionIsStillValid(ctx, &auth.SessionIsStillValidRequest{SessionId: jwtauth.GetSessionIdFromContext(ctx)})
+	if err != nil || !resp.IsValid {
+		return ctx, status.Errorf(codes.Unauthenticated, "Session expired or no longer exists.")
+	}
 
 	return ctx, nil
 }

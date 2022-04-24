@@ -29,7 +29,7 @@ option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
 service PositionService {
 	rpc GetPosition(GetPositionRequest) returns (GetPositionResponse) {
 		option (google.api.http) = {
-			get: "/position/{device_id}"
+			get: "/location/{device_id}"
 		};
 		option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
 			security: {
@@ -42,7 +42,7 @@ service PositionService {
 	}
 	rpc PostPosition(PostPositionRequest) returns (PostPositionResponse) {
 		option (google.api.http) = {
-			post: "/position",
+			post: "/location",
 			body: "*"
 		};
 		option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
@@ -56,7 +56,7 @@ service PositionService {
 	}
 	rpc GetRecentPosition(GetRecentPositionRequest) returns (GetRecentPositionResponse) {
 		option (google.api.http) = {
-			get: "/position/{device_id}/recent"
+			get: "/location/{device_id}/recent"
 		};
 		option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
 			security: {

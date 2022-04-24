@@ -3,7 +3,7 @@ module github.com/cory-evans/gps-tracker-position
 go 1.17
 
 require (
-	github.com/cory-evans/gps-tracker-authentication v0.0.0-20220420040459-fe8e623154f1
+	github.com/cory-evans/gps-tracker-authentication v0.0.0-20220424005211-37536b275b3c
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.10.0
 	google.golang.org/genproto v0.0.0-20220414192740-2d67ff6cf2b4
 	google.golang.org/grpc v1.45.0
