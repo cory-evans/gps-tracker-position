@@ -3,7 +3,7 @@ package models
 import (
 	"time"
 
-	"github.com/cory-evans/gps-tracker-position/pkg/position"
+	position "go.buf.build/grpc/go/corux/gps-tracker-position/position/v1"
 	"go.mongodb.org/mongo-driver/bson"
 )
 

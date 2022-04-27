@@ -4,10 +4,12 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/cory-evans/gps-tracker-authentication/pkg/auth"
 	"github.com/cory-evans/gps-tracker-authentication/pkg/jwtauth"
 	"github.com/cory-evans/gps-tracker-position/internal/models"
-	"github.com/cory-evans/gps-tracker-position/pkg/position"
+
+	auth "go.buf.build/grpc/go/corux/gps-tracker-auth/auth/v1"
+	position "go.buf.build/grpc/go/corux/gps-tracker-position/position/v1"
+
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo/options"
 	"google.golang.org/grpc/metadata"
@@ -69,7 +71,7 @@ func (s *PositionService) GetPosition(ctx context.Context, req *position.GetPosi
 	}, nil
 }
 
-func (s *PositionService) GetOwnedDevicesPositions(ctx context.Context, req *position.GetOwnedDevicesPositionRequest) (*position.GetOwnedDevicesPositionResponse, error) {
+func (s *PositionService) GetOwnedDevicesPositions(ctx context.Context, req *position.GetOwnedDevicesPositionsRequest) (*position.GetOwnedDevicesPositionsResponse, error) {
 	authServiceClient, err := s.getAuthServiceClient()
 	if err != nil {
 		return nil, err
@@ -98,7 +100,7 @@ func (s *PositionService) GetOwnedDevicesPositions(ctx context.Context, req *pos
 		positions[i] = p.AsProtoBuf()
 	}
 
-	return &position.GetOwnedDevicesPositionResponse{
+	return &position.GetOwnedDevicesPositionsResponse{
 		Positions: positions,
 	}, nil
 }

@@ -9,8 +9,8 @@ import (
 
 	"github.com/cory-evans/gps-tracker-position/internal/database"
 	"github.com/cory-evans/gps-tracker-position/internal/service"
-	"github.com/cory-evans/gps-tracker-position/pkg/position"
 	grpc_auth "github.com/grpc-ecosystem/go-grpc-middleware/auth"
+	position "go.buf.build/grpc/go/corux/gps-tracker-position/position/v1"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"

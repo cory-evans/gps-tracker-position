@@ -5,9 +5,10 @@ import (
 	"log"
 	"os"
 
-	"github.com/cory-evans/gps-tracker-authentication/pkg/auth"
+	auth "go.buf.build/grpc/go/corux/gps-tracker-auth/auth/v1"
+	position "go.buf.build/grpc/go/corux/gps-tracker-position/position/v1"
+
 	"github.com/cory-evans/gps-tracker-authentication/pkg/jwtauth"
-	"github.com/cory-evans/gps-tracker-position/pkg/position"
 	"go.mongodb.org/mongo-driver/mongo"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
@@ -38,7 +39,7 @@ func (s *PositionService) AuthFuncOverride(ctx context.Context, fullMethodName s
 	}
 	log.Println("INFO: Authenticated request to", fullMethodName)
 
-	resp, err := authClient.SessionIsStillValid(ctx, &auth.SessionIsStillValidRequest{SessionId: jwtauth.GetSessionIdFromContext(ctx)})
+	resp, err := authClient.SessionIsValid(ctx, &auth.SessionIsValidRequest{SessionId: jwtauth.GetSessionIdFromContext(ctx)})
 	if err != nil {
 		return ctx, status.Errorf(codes.Internal, "Internal Server Error: %s", err.Error())
 	}
