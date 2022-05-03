@@ -94,7 +94,7 @@ func (s *PositionService) GetOwnedDevicesPositions(ctx context.Context, req *pos
 		var p models.Position
 		err := positionCol.FindOne(ctx, bson.M{"device_id": device.DeviceId}, opts).Decode(&p)
 		if err != nil {
-			return nil, err
+			continue
 		}
 
 		positions[i] = p.AsProtoBuf()
