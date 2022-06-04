@@ -13,7 +13,6 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/credentials/insecure"
-	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 )
 
@@ -30,26 +29,6 @@ func (s *PositionService) AuthFuncOverride(ctx context.Context, fullMethodName s
 
 		// all requests are authenticated
 		return ctx, status.Errorf(codes.Unauthenticated, "Not authenticated.")
-	}
-
-	// check if session still exists
-	authClient, err := s.getAuthServiceClient()
-	if err != nil {
-		log.Println("error getting auth service client:", err)
-		return ctx, status.Errorf(codes.Internal, "Internal server error.")
-	}
-	log.Println("INFO: Authenticated request to", fullMethodName)
-
-	md, _ := metadata.FromIncomingContext(ctx)
-	newCtx := context.Background()
-	newCtx = metadata.NewOutgoingContext(newCtx, md)
-	resp, err := authClient.SessionIsValid(newCtx, &auth.SessionIsValidRequest{SessionId: jwtauth.GetSessionIdFromContext(ctx)})
-	if err != nil {
-		return ctx, status.Errorf(codes.Unauthenticated, "Session has expired: %s", err.Error())
-	}
-
-	if !resp.IsValid {
-		return ctx, status.Errorf(codes.Unauthenticated, "Session expired or no longer exists.")
 	}
 
 	return ctx, nil
