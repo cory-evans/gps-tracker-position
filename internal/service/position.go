@@ -41,8 +41,8 @@ func (s *PositionService) PostPosition(ctx context.Context, req *position.PostPo
 	}
 
 	_, err = positionsCol.InsertOne(ctx, &models.Position{
-		Latitude:   req.GetLongitude(),
-		Longitude:  req.GetLatitude(),
+		Latitude:   req.GetLatitude(),
+		Longitude:  req.GetLongitude(),
 		Altitude:   req.GetAltitude(),
 		SpeedKnots: req.GetSpeedKnots(),
 		Accuracy:   req.GetAccuracy(),
